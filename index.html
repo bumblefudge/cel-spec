@@ -888,8 +888,89 @@ for the applications in their ecosystem.
 
         </p>
 
-        <pre class="example nohighlight" title="Example of an ActivityPub Post that has been edited">
-
+        <pre class="example nohighlight" title="Example of a ActivityPub Post that was edited">
+[{
+  "event": {
+    "type": "Create",
+    "data": {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "type": "Create",
+      "id": "https://personal.example/mallory/87374",
+      "actor": "https://personal.example/mallory",
+      "object": {
+        "id": "https://website.example/mallory/note/72",
+        "type": "Note",
+        "attributedTo": "https://personal.example/mallory",
+        "content": "This is a note",
+        "published": "2025-02-10T15:04:55Z",
+        "to": ["https://example.org/~john/"],
+        "cc": ["https://website.example/~erik/followers",
+              "https://www.w3.org/ns/activitystreams#Public"]
+      },
+      "published": "2025-02-10T15:04:55Z",
+      "to": ["https://example.org/~john/"],
+      "cc": ["https://website.example/~erik/followers",
+            "https://www.w3.org/ns/activitystreams#Public"]
+    },
+  },
+  "proof": [{
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2025-02-10T15:04:55Z",
+    "verificationMethod": "https://personal.example/mallory#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2025-02-10T15:05:02Z",
+    "verificationMethod": "https://redsocial.example/attestations#key-5W",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2025-02-10T15:05:08Z",
+    "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+  }]
+}, {
+  "event": {
+    "type": "Update",
+    "data": {
+      "@context": "https://www.w3.org/ns/activitystreams",
+      "type": "Update",
+      "object": {
+        "id": "https://website.example/mallory/note/72",
+        "content": "This is an updated note",
+        "published": "2025-02-10T15:07:15Z",
+      }
+    },
+  },
+  "proof": [{
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2025-02-10T15:07:15Z",
+    "verificationMethod": "https://personal.example/mallory#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2025-02-10T15:07:19Z",
+    "verificationMethod": "https://redsocial.example/attestations#key-5W",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2025-02-10T15:07:26Z",
+    "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+  }]
+}]
         </pre>
       </section>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Epoch v0.1</title>
+    <title>Cryptographic Event Log v0.1</title>
     <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
     <!--
       === NOTA BENE ===
@@ -20,10 +20,10 @@
         specStatus: "CG-DRAFT",
 
         // the specification's short name, as in http://www.w3.org/TR/short-name/
-        shortName: "epoch-1.0",
+        shortName: "cel-1.0",
 
         // subtitle for the spec
-        subtitle: "Event Protocol for Ordered Cryptographic Hashes",
+        subtitle: "A cryptographic protocol for verifying a log of changes to data",
 
         // if you wish the publication date to be other than today, set this
         //publishDate: "2024-11-05",
@@ -50,11 +50,11 @@
           /*add_reqlist_button*/
         ],
 
-        github: "https://github.com/digitalbazaar/epoch-spec/",
+        github: "https://github.com/digitalbazaar/cel-spec/",
         includePermalinks: false,
 
         // if there a publicly available Editor's Draft, this is the link
-        edDraftURI: "https://digitalbazaar.github.io/epoch-spec/",
+        edDraftURI: "https://digitalbazaar.github.io/cel-spec/",
 
         // if this is a LCWD, uncomment and set the end of its review period
         // lcEnd: "2009-08-05",
@@ -88,7 +88,7 @@
             w3cid: 0
           }
         ],
-        xref: ["URL", "I18N-GLOSSARY", "INFRA"],
+        xref: ["URL", "I18N-GLOSSARY", "INFRA", "VC-DATA-INTEGRITY"],
         lint: { "informative-dfn": false },
         maxTocLevel: 3,
         inlineCSS: true
@@ -184,9 +184,6 @@ objects, and other data formats.
     <section class="informative">
       <h2>Introduction</h2>
 
-      <p>
-
-      </p>
 
       <section id="conformance">
         <p>
@@ -220,6 +217,141 @@ non-conforming documents are consumed.
       <p>
 
       </p>
+
+      <section class="normative">
+        <h2>Cryptographic Event Log Entry</h2>
+
+        <p>
+A cryptographic event log entry is used to establish an event that can be
+independently verified by a verifier. The log entry MUST be composed of
+at least a single `event` and one or more associated `proof` values that can be
+used to verify the validity of the event.
+        </p>
+
+        <p>
+A [=conforming processor=] MUST support `proof` values expressed using the
+[[[VC-DI-ECDSA]]] specification and the `ecdsa-jcs-2019` cryptosuite and
+MAY support other proof formats.
+        </p>
+
+        <pre class="example nohighlight" title="An event log entry containing data embedded directly in the event.">
+{
+  "event": {
+    <span class="comment">// the type of event</span>
+    "type": "Create",
+    <span class="comment">// the data associated with the event (in JSON format)</span>
+    "data": {
+      "name": "Hello World!",
+      <span class="comment">// the cryptographic authority for the data is established in this object</span>
+      <span class="comment">// for example: "authority": "https://website.example/crypto#key-1"</span>
+    }
+  },
+  <span class="comment">// one or more proofs that secure the integrity of the event above</span>
+  "proof": {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:28Z",
+    "verificationMethod": "https://website.example/crypto#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zq6PrUMCtqY5obCSsrQxuFJd...wVWgHYrXxoV93gBHqGDBtQLPFxpZxz"
+  }
+}
+        </pre>
+
+        <p>
+Some data are too large to include in the event log itself. For these cases,
+it is possible to refer to data outside of the event log and digitally sign
+a cryptographic hash of the external data. It is also possible to provide
+multiple URLs for a verifier to use when retrieving the external data.
+        </p>
+
+        <pre class="example nohighlight" title="An event log entry containing a reference to data.">
+{
+  "event": {
+    "type": "Create",
+    <span class="comment">// a reference to the data associated with the event</span>
+    "dataReference": {
+      <span class="comment">// URLs that can be used to retrieve the data</span>
+      "url": [
+        "https://website.example/file.dat",
+        "3jxop4cs2lu5ur2...sseqdsp3k262uwy4.onion/file.dat",
+        "ipfs://QmTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3RCQFJGkARStJb"
+      ],
+      <span class="comment">// The media type of the associated data</span>
+      "mediaType": "application/octet-stream",
+      <span class="comment">// a cryptographic digest of the data (sha2-256 base64-url-nopad)</span>
+      "digestMultibase": "uEiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQ"
+    }
+  },
+  <span class="comment">// one or more proofs that secure the integrity of the event above</span>
+  "proof": {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:28Z",
+    "verificationMethod": "https://website.example/crypto#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  }
+}
+        </pre>
+
+
+      </section>
+
+      <section class="normative">
+        <h2>Event Witness</h2>
+
+        <p>
+An <dfn>event witness</dfn> is a service that can attest to the existence of
+data at a particular point in time. These services are trusted by the verifier
+to attest to the existence of data at a particular point in time by digitally
+signing a cryptographic hash that is provided to them such that they do not
+see the data, but confirm the existence of the data.
+        </p>
+
+        <p>
+The [=event witness=] performs their function by appending another
+[=data integrity proof=] onto the array of `proof` values.
+        </p>
+
+        <pre class="example nohighlight" title="An event log entry containing a reference to data.">
+{
+  "event": {
+    "type": "Create",
+    <span class="comment">// a reference to the data associated with the event</span>
+    "dataReference": {
+      <span class="comment">// URLs that can be used to retrieve the data</span>
+      "url": [
+        "https://website.example/file.dat",
+        "3jxop4cs2lu5ur2...sseqdsp3k262uwy4.onion/file.dat",
+        "ipfs://QmTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3RCQFJGkARStJb"
+      ],
+      <span class="comment">// The media type of the associated data</span>
+      "mediaType": "application/octet-stream",
+      <span class="comment">// a cryptographic digest of the data (sha2-256 base64-url-nopad)</span>
+      "digestMultibase": "uEiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQ"
+    }
+  },
+  <span class="comment">// one or more proofs that secure the integrity of the event above</span>
+  "proof": [{
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:28Z",
+    "verificationMethod": "https://website.example/crypto#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:45Z",
+    "verificationMethod": "https://witness.example/attestation#key-P8",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+  }]
+}
+        </pre>
+
+      </section>
 
     </section>
 

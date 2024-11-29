@@ -404,8 +404,114 @@ The [=event witness=] performs their function by appending another
       <h2>Algorithms</h2>
 
       <p>
-
+The algorithms described in this section outline the procedures used to ensure
+the integrity and security of the event log. These algorithms provide the means
+for securely recording, verifying, and sharing changes to data in a
+decentralized system. By leveraging cryptographic techniques, the algorithms
+ensure that the event log is tamper-proof and verifiable, allowing parties to
+independently confirm the authenticity of the data. The following subsections
+detail the specific algorithms used for creating event entries, verifying their
+integrity, and ensuring consistency across systems.
       </p>
+
+      <section class="normative">
+        <h2>Create Event Log</h2>
+
+        <p>
+The following algorithm defines the process for creating an event log.
+        </p>
+
+        <ol class="algorithm">
+          <li>
+Let |eventLog| be an empty [=list=].
+          </li>
+          <li>
+Let |event| be the output of Section [[[#create-event]]].
+          </li>
+          <li>
+Append |event| to |eventLog|.
+          </li>
+          <li>
+Return |eventLog|.
+          </li>
+        </ol>
+
+      </section>
+
+      <section class="normative">
+        <h2>Create Event</h2>
+
+        <p>
+The following algorithm defines the process for creating an event log entry.
+The event log serves as a record of changes to data within a system, capturing
+key information such as the type of event, the associated cryptographic hash of
+the protected data, and a proof that secures both. The algorithm ensures that
+each event is securely logged and that the integrity of the data is maintained
+over time. By following this process, systems can reliably document and share
+events, providing verifiable evidence of changes while maintaining
+decentralization and security.
+        </p>
+
+        <ol class="algorithm">
+          <li>
+
+          </li>
+          <li>
+
+          </li>
+          <li>
+
+          </li>
+        </ol>
+
+      </section>
+
+      <section class="normative">
+        <h2>Update Event Log</h2>
+
+        <p>
+This section outlines the algorithm for updating an existing event log entry. As
+events occur and data changes, it is essential to ensure that the event log
+remains accurate, up-to-date, and secure. The update process involves appending
+new event entries while preserving the integrity of previous entries through
+cryptographic validation. This algorithm ensures that each update is properly
+recorded and can be verified independently, allowing systems to maintain an
+up-to-date, tamper-proof record of all changes.
+        </p>
+
+      </section>
+
+      <section class="normative">
+        <h2>Deactivate Event Log</h2>
+
+        <p>
+This section describes the algorithm for deactivating an event log entry when it
+is no longer relevant or needed. Deactivation marks the point at which an event
+log is no longer active, ensuring that no further changes can be made to the
+entry while maintaining the integrity of the data already recorded. The
+algorithm ensures that the deactivation process is secure, verifiable, and
+irreversible, allowing systems to formally close out event logs without
+compromising the authenticity of prior entries.
+        </p>
+
+      </section>
+
+      <section class="normative">
+        <h2>Verify Event Log</h2>
+
+        <p>
+This section outlines the algorithm for verifying the integrity and authenticity
+of an event log. The process ensures that the event log has not been tampered
+with and that each entry is consistent with the expected cryptographic proofs.
+By using cryptographic signatures and validation techniques, the algorithm
+allows verifiers to independently confirm that the recorded events are genuine
+and have not been altered over time. This verification process is essential for
+maintaining trust and accountability in decentralized systems, where
+participants rely on accurate records that have not been tampered with over
+time.
+        </p>
+
+      </section>
 
     </section>
 

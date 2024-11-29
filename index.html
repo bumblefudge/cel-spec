@@ -184,6 +184,51 @@ objects, and other data formats.
     <section class="informative">
       <h2>Introduction</h2>
 
+      <p>
+In decentralized systems, coordination relies on a shared view of reality to
+make decisions. This shared reality can include various types of information,
+such as the balance of a financial account, the current holder of cryptographic
+material (like a public key), the location of a physical asset, or the sequence
+of comments in an online forum. When this information is expressed digitally, it
+is important to understand the order of events that led to the current state.
+Additionally, it is crucial for systems to be able to share this information in
+a decentralized way, with guarantees that the event log has not been tampered
+with over time.
+      </p>
+
+      <p>
+One approach to securing a cryptographic log of information is to establish a
+cryptographic key to be associated with a particular piece of data and then only
+trust changes to that information where each change is digitally signed by the
+controller of the cryptographic key. One challenge with this approach is that
+the controller might modify the sequence of events at any point, effectively
+rewriting history, if they can gain an advantage in a decentralized system.
+      </p>
+
+      <p>
+To prevent rewriting history, some decentralized systems have turned to
+centralized solutions to "witness" the log of events that change the underlying
+data. Centralized solutions tend to create problems with the power dynamics
+in an ecosystem and, unsurprisingly, centralized previously decentralized solutions.
+      </p>
+
+      <p>
+Other decentralized systems have turned to solutions such as decentralized
+ledger technologies (also known as blockchains) to share the state of a system.
+Some of these decentralized solutions tend to create their own problems such as
+energy use that some view as excessive (proof of work) or an excessive
+centralization of capital (proof of stake). Decentralized solutions
+also tend to make some governments nervous and slow adoption due to the
+uncertainty associated with the political dynamic of the underlying
+cryptocurrency.
+      </p>
+
+      <p>
+This specification defines a decentralized cryptographic event log format
+where a verifier depends on the controller of a particular piece of data,
+as well as external witnesses that they trust, to establish trust in the
+current state of a particular object in a decentralized system.
+      </p>
 
       <section id="conformance">
         <p>

@@ -778,9 +778,120 @@ Return |true|.
     <section class="normative">
       <h2>Extension Specifications</h2>
 
-      <p>
-
+      <p class="issue" title="Contains sample extension specifications">
+This section contains sample extension specifications and how different
+ecosystems would use this specification to achieve cryptographic event logs
+for the applications in their ecosystem.
       </p>
+
+      <section>
+        <h3>DID Document Event Logs</h3>
+
+        <p>
+
+        </p>
+
+        <pre class="example nohighlight" title="Example of a DID Document that has performed a key rotation">
+[{
+  "event": {
+    "type": "Create",
+    "data": {
+      "@context": "https://www.w3.org/ns/did/v1.1",
+      "id": "did:example:",
+      "verificationMethod": [{
+        "id": "#key-1",
+        "type": "Multikey",
+        "controller": "did:example",
+        "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
+      }],
+      "authentication": ["#key-1"],
+      "assertionMethod": ["#key-1"],
+      "capabilityDelegation": [],
+      "capabilityInvocation": []
+    }
+  },
+  "proof": [{
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:28Z",
+    "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:45Z",
+    "verificationMethod": "https://rednation.example/attestations#key-5W",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-29T13:56:49Z",
+    "verificationMethod": "https://bluenation.example/witnesses#key-Z2",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+  }]
+}, {
+  "event": {
+    "type": "Update",
+    "data": {
+      "@context": "https://www.w3.org/ns/did/v1.1",
+      "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+      "verificationMethod": [{
+        "id": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+        "type": "Multikey",
+        "controller": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+        "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
+      }, {
+        "id": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2",
+        "type": "Multikey",
+        "controller": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+        "publicKeyMultibase": "z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP"
+      }],
+      "authentication": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1"],
+      "assertionMethod": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
+      "capabilityDelegation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
+      "capabilityInvocation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"]
+    }
+  },
+  "proof": [{
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-30T17:03:42Z",
+    "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-30T17:03:49Z",
+    "verificationMethod": "https://rednation.example/attestations#key-5W",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+  }, {
+    "type": "DataIntegrityProof",
+    "cryptosuite": "ecdsa-jcs-2019",
+    "created": "2024-11-30T17:03:57Z",
+    "verificationMethod": "https://bluenation.example/witnesses#key-Z2",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+  }]
+}]
+        </pre>
+      </section>
+
+      <section>
+        <h3>ActivityPub Event Logs</h3>
+
+        <p>
+
+        </p>
+
+        <pre class="example nohighlight" title="Example of an ActivityPub Post that has been edited">
+
+        </pre>
+      </section>
 
     </section>
 

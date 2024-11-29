@@ -260,18 +260,22 @@ non-conforming documents are consumed.
       <h2>Data Model</h2>
 
       <p>
-
+A <dfn data-lt="event log">cryptographic event log</dfn> is a [=list=] of
+protected events that enable an author to express changes to a specific instance
+of data over time in a way that is tamper tamper-evident and that can be
+cryptographically verified by verifiers in a decentralized manner.
       </p>
 
       <section class="normative">
-        <h2>Cryptographic Event Log Entry</h2>
+        <h2>Event Entry</h2>
 
         <p>
-A cryptographic event log entry is used to establish an event that can be
-independently verified by a verifier. The log entry MUST be composed of at least
-a single `event` and one or more associated `proof` values that can be used to
-verify the validity of the event. The `event` value is defined below  and MUST
-include either a `data` entry or a `dataReference` entry:
+A cryptographic <dfn data-lt="event entry">event log entry</dfn> is used to
+establish an event that can be independently verified by a verifier. The log
+entry MUST be composed of at least a single `event` and one or more associated
+`proof` values that can be used to verify the validity of the event. The `event`
+value is defined below  and MUST include either a `data` entry or a
+`dataReference` entry:
         </p>
 
         <table class="simple">
@@ -523,15 +527,86 @@ events, providing verifiable evidence of changes while maintaining
 decentralization and security.
         </p>
 
+        <p>
+Required inputs are an [=event log=] ([=map=] inputEventLog), and
+[=event entry=] ([=map=] |inputEvent|) and a set of
+options ([=map=] |options|). An [=event log=] ([=map=]), or an error,
+is produced as output.
+        </p>
+
         <ol class="algorithm">
           <li>
-
+Let |event| be a deep copy of |inputEvent| and let |eventLog| be a deep copy of
+|inputEventLog|.
           </li>
           <li>
-
+Ensure that |event|.|type| is set to `Create` or throw an error.
           </li>
           <li>
+Let |event|.|proof| be the output of |options|.|createProof| algorithm if it is
+specified, or the <a data-cite="VC-DI-ECDSA##create-proof-ecdsa-jcs-2019">
+ECDSA Create Proof Algorithm (ecdsa-jcs-2019)</a> with |event| and
+|options|.|proofOptions| passed in as |unsecuredDataDocument| and |options|,
+respectively.
+          </li>
+          <li>
+Append |event| to |eventLog|.
+          </li>
+          <li>
+Return |eventLog|.
+          </li>
+        </ol>
 
+      </section>
+
+      <section class="normative">
+        <h2>Witness Event</h2>
+
+        <p>
+The following algorithm defines the process for witnessing an event log entry.
+A witness for an event log entry does so by digitally signing a cryptographic
+hash instead of viewing the data directly. This provides privacy for the
+author and eliminates liability for the witness. Effectively, the signed
+value states: "I witness cryptographic has X at point in time Y.", which
+establishes that the data existed at that particular point in time. Witness
+services are expected to be external to the system requesting the witnessing,
+such as through an HTTP endpoint that accepts a cryptographic hash as input.
+        </p>
+
+        <p class="issue" title="Define HTTP endpoint function call">
+This specification should probably define the witness HTTP endpoint function
+call. The endpoint would take in a `digestMultibase` value and produce a
+valid [=data integrity proof=].
+        </p>
+
+        <p>
+Required inputs are an [=event entry=] ([=map=] |inputEvent|) and a set of
+options ([=map=] |options|). An [=event entry=] ([=map=]), or an error,
+is produced as output.
+        </p>
+
+        <ol class="algorithm">
+          <li>
+Let |event| be a deep copy of |inputEvent|.
+          </li>
+          <li>
+Ensure that |event|.|proof| exists, and is a [=list=].
+          </li>
+          <li>
+Let |eventHash| be the result of cryptographically hashing |event| using the
+rules defined for `digestMultibase` in Section [[[#event-entry]]].
+          </li>
+          <li>
+Let |witnessProof| be the output of calling a witness service to generate
+a digital signature according to the |options|.|cryptosuite| algorithm if it is
+specified, or the <a data-cite="VC-DI-ECDSA##create-proof-ecdsa-jcs-2019">
+ECDSA Create Proof Algorithm (ecdsa-jcs-2019)</a> with |eventHash| as input.
+          </li>
+          <li>
+Append |witnessProof| to |event|.|proof|.
+          </li>
+          <li>
+Return |event|.
           </li>
         </ol>
 
@@ -550,6 +625,29 @@ recorded and can be verified independently, allowing systems to maintain an
 up-to-date, tamper-proof record of all changes.
         </p>
 
+        <ol class="algorithm">
+          <li>
+Let |event| be a deep copy of |inputEvent| and let |eventLog| be a deep copy of
+|inputEventLog|.
+          </li>
+          <li>
+Ensure that |event|.|type| is set to `Update` or throw an error.
+          </li>
+          <li>
+Let |event|.|proof| be the output of |options|.|createProof| algorithm if it is
+specified, or the <a data-cite="VC-DI-ECDSA##create-proof-ecdsa-jcs-2019">
+ECDSA Create Proof Algorithm (ecdsa-jcs-2019)</a> with |event| and
+|options|.|proofOptions| passed in as |unsecuredDataDocument| and |options|,
+respectively.
+          </li>
+          <li>
+Append |event| to |eventLog|.
+          </li>
+          <li>
+Return |eventLog|.
+          </li>
+        </ol>
+
       </section>
 
       <section class="normative">
@@ -564,6 +662,29 @@ algorithm ensures that the deactivation process is secure, verifiable, and
 irreversible, allowing systems to formally close out event logs without
 compromising the authenticity of prior entries.
         </p>
+
+        <ol class="algorithm">
+          <li>
+Let |event| be a deep copy of |inputEvent| and let |eventLog| be a deep copy of
+|inputEventLog|.
+          </li>
+          <li>
+Ensure that |event|.|type| is set to `Deactivate` or throw an error.
+          </li>
+          <li>
+Let |event|.|proof| be the output of |options|.|createProof| algorithm if it is
+specified, or the <a data-cite="VC-DI-ECDSA##create-proof-ecdsa-jcs-2019">
+ECDSA Create Proof Algorithm (ecdsa-jcs-2019)</a> with |event| and
+|options|.|proofOptions| passed in as |unsecuredDataDocument| and |options|,
+respectively.
+          </li>
+          <li>
+Append |event| to |eventLog|.
+          </li>
+          <li>
+Return |eventLog|.
+          </li>
+        </ol>
 
       </section>
 
@@ -581,6 +702,30 @@ maintaining trust and accountability in decentralized systems, where
 participants rely on accurate records that have not been tampered with over
 time.
         </p>
+
+        <ol class="algorithm">
+          <li>
+Let |eventLog| be a deep copy of |inputEventLog|.
+          </li>
+          <li>
+For each |event| in |eventLog|, for each |proof| in |event|:
+            <ol class="algorithm">
+              <li>
+Verify |proof| using the |options|.|verifyProof| algorithm if it is
+specified, or the <a data-cite="VC-DI-ECDSA#verify-proof-ecdsa-jcs-2019">
+ECDSA Verify Proof Algorithm (ecdsa-jcs-2019)</a> with |event| and
+|options|.|proofOptions| passed in as |securedDataDocument| and |options|,
+respectively.
+              </li>
+              <li>
+If the proof verification fails, raise an error.
+              </li>
+            </ol>
+          </li>
+          <li>
+Return |true|.
+          </li>
+        </ol>
 
       </section>
 

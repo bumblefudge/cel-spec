@@ -476,6 +476,50 @@ The [=event witness=] performs their function by appending another
     </section>
 
     <section class="normative">
+      <h2>Serializations</h2>
+
+      <p>
+The data model described in this specification can be serialized as JSON or
+CBOR.
+      </p>
+
+      <p class="issue" title="Multiple serializations increase complexity">
+If we do not provide a CBOR serialization, some subset of the developer
+community will complain. The only argument for a CBOR serialization is
+ensuring a byte-optimized storage format. We could make CBOR the default
+serialization, but at the cost of alienating developers that don't work in
+CBOR (which is most of them). The only time size restrictions come into
+play is with large event logs (or large binaries in event logs), which are a
+possibility. We're going to start out with JSON, see how far it gets us, and
+see if the pro-CBOR community would be willing to trade CPU cycles to
+convert to/from CBOR from JSON (ensuring a stable round-tripping). The number
+of fields we'd have to pick CBOR values for is minimal.
+      </p>
+
+      <section class="normative">
+        <h3>JSON</h3>
+
+      <p class="issue" title="Default representation is JSON">
+The default representation for a [=cryptographic event log=] is JSON. That
+might change if we get enough developer feedback to use CBOR.
+      </p>
+
+      </section>
+
+      <section class="normative">
+        <h3>CBOR</h3>
+
+      <p class="issue" title="Default representation is JSON">
+The default representation for a [=cryptographic event log=] is JSON. That
+might change if we get enough developer feedback to use CBOR. The alternative
+is to provide a bi-directional mapping to CBOR which reduces storage
+requirements.
+      </p>
+      </section>
+
+    </section>
+
+    <section class="normative">
       <h2>Algorithms</h2>
 
       <p>

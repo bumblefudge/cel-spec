@@ -788,7 +788,34 @@ for the applications in their ecosystem.
         <h3>DID Document Event Logs</h3>
 
         <p>
+The example in this section shows how changes to a DID Document could be
+performed in a way that is fully decentralized without requiring a blockchain.
+Witnesses are selected based on which ones verifiers might trust the most
+without introducing a cold start problem. One can start a network with a single
+witness and proceed from there as only a single witness is required to be
+trusted by a verifier for the change entry to be seen as valid.
+        </p>
 
+        <p>
+The application-specific aspects of this particular extension require the
+initial DID Document to be hashed without the value of the DID being placed
+in the DID Document. Once the initial `data` value is hashed, that becomes
+the DID for all subsequent DID Documents which creates a stable identifier
+for the controller of the DID to use.
+        </p>
+
+        <p>
+Each event log entry needs to be signed by a verification method that is
+trusted to perform assertions, which is listed in the initial log entry.
+Future log entries can rotate cryptographic keys by using a key that is
+trusted to make assertions from the previous log entry. Future changes
+use the newly rotated key. Witness signatures are provided by two nations,
+the red nation and the blue nation, who are presumed to be mutually distrustful
+of one another, but both provide witnessing services for their citizens.
+This demonstrates that mutually distrustful nations can provide signatures
+on each other's citizen data without requiring prior authorization. If
+nations cannot bring themselves to run such services, private industry will
+likely also operate witnessing services.
         </p>
 
         <pre class="example nohighlight" title="Example of a DID Document that has performed a key rotation">

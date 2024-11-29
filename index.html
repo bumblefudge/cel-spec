@@ -240,9 +240,9 @@ Sections [[[#data-model]]].
         </p>
 
         <p>
-A <dfn class="lint-ignore">conforming event log specification</dfn> is
+A <dfn class="lint-ignore">conforming extension specification</dfn> is
 any specification that follows the relevant normative requirements in Section
-[[[#event-log-specifications]]].
+[[[#extension-specifications]]].
         </p>
 
         <p>
@@ -268,10 +268,81 @@ non-conforming documents are consumed.
 
         <p>
 A cryptographic event log entry is used to establish an event that can be
-independently verified by a verifier. The log entry MUST be composed of
-at least a single `event` and one or more associated `proof` values that can be
-used to verify the validity of the event.
+independently verified by a verifier. The log entry MUST be composed of at least
+a single `event` and one or more associated `proof` values that can be used to
+verify the validity of the event. The `event` value is defined below  and MUST
+include either a `data` entry or a `dataReference` entry:
         </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>type</td>
+              <td>
+A REQUIRED property whose value is the type of event being expressed. A
+[=conforming processor=] MUST support the following [=string=] values: `Create`,
+`Update`, and `Deactivate` and MAY support other values defined by
+[=conforming extension specifications=].
+              </td>
+            </tr>
+            <tr>
+              <td>data</td>
+              <td>
+An OPTIONAL property whose value contains the JSON expression of the data
+being secured. If this property is specified, the `dataReference` property
+MUST NOT be specified.
+              </td>
+            </tr>
+            <tr>
+              <td>dataReference</td>
+              <td>
+An OPTIONAL property whose value contains a reference and cryptographic hash
+to the data being secured. If this property is specified, the `data` property
+MUST NOT be specified. The format for the value is defined below:
+
+                <table class="simple">
+                  <thead>
+                    <tr>
+                      <th style="white-space: nowrap">Property</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>url</td>
+                      <td>
+An OPTIONAL property whose value MUST be a [=list=] of one or more URLs that
+can be used to retrieve the data being secured. If no `url` value is specified,
+the mechanism used to retrieve the data is application-specific.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mediaType</td>
+                      <td>
+An OPTIONAL property whose value MUST be a media type as defined by
+[[[RFC6838]]].
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>digestMultibase</td>
+                      <td>
+A REQUIRED property whose value MUST be a <a
+data-cite="CONTROLLER-DOCUMENT#multibase-0">Multibase-encoded</a> (base64-url-nopad) <a
+data-cite="CONTROLLER-DOCUMENT#multihash">Multihash</a> (sha2-256) value.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <p>
 A [=conforming processor=] MUST support `proof` values expressed using the
@@ -516,7 +587,7 @@ time.
     </section>
 
     <section class="normative">
-      <h2>Event Log Specifications</h2>
+      <h2>Extension Specifications</h2>
 
       <p>
 

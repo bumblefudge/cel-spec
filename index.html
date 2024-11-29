@@ -912,7 +912,28 @@ likely also operate witnessing services.
         <h3>ActivityPub Event Logs</h3>
 
         <p>
+The example in this section demonstrates the creation of an ActivityPub Note,
+which is then edited and updated in a way that can be confirmed by independent
+verifiers.
+        </p>
 
+        <p>
+The application-specific extension to this specification establishes the
+cryptographic keys that are trusted to sign cryptographic logs by using the
+`actor` property (`https://personal.example/mallory`).
+        </p>
+
+        <p>
+The initial Note contains a message that says "I'll be there at 5pm", and the
+subsequent update changes that message to "I'll be there at 6pm".
+        </p>
+
+        <p>
+Both the initial note and the subsequent update are witnessed by the red
+and blue social network servers, which are presumed to be run by different
+organizations. By providing witnessing services, both social networks can
+support the trustworthiness of events as they occur across the fediverse
+without the need for centralized time-stamping services for either network.
         </p>
 
         <pre class="example nohighlight" title="Example of a ActivityPub Post that was edited">
@@ -928,7 +949,7 @@ likely also operate witnessing services.
         "id": "https://website.example/mallory/note/72",
         "type": "Note",
         "attributedTo": "https://personal.example/mallory",
-        "content": "This is a note",
+        "content": "I'll be there at 5pm",
         "published": "2025-02-10T15:04:55Z",
         "to": ["https://example.org/~john/"],
         "cc": ["https://website.example/~erik/followers",
@@ -970,7 +991,7 @@ likely also operate witnessing services.
       "type": "Update",
       "object": {
         "id": "https://website.example/mallory/note/72",
-        "content": "This is an updated note",
+        "content": "I'll be there at 6pm",
         "published": "2025-02-10T15:07:15Z",
       }
     },

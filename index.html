@@ -279,6 +279,67 @@ verifiers in a decentralized manner.
       </p>
 
       <section class="normative">
+        <h2>External Reference</h2>
+
+        <p>
+An external reference points to data outside of the event log in a way
+that is cryptographically verifiable. The reference can provide a list of
+URLs where the data can be retrieved, a media type to use when performing
+the data retrieval, and a cryptographic hash of the data.
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>url</td>
+              <td>
+An OPTIONAL property whose value MUST be a [=list=] of one or more URLs that
+can be used to retrieve the data being secured. If no `url` value is specified,
+the mechanism used to retrieve the data is application-specific.
+              </td>
+            </tr>
+            <tr>
+              <td>mediaType</td>
+              <td>
+An OPTIONAL property whose value MUST be a media type as defined by the
+[[[RFC6838]]].
+              </td>
+            </tr>
+            <tr>
+              <td>digestMultibase</td>
+              <td>
+A REQUIRED property whose value MUST be a <a
+data-cite="CONTROLLER-DOCUMENT#multibase-0">Multibase-encoded</a> (base64-url-nopad) <a
+data-cite="CONTROLLER-DOCUMENT#multihash">Multihash</a> (sha2-256) value.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <pre class="example nohighlight" title="An external reference to a file containing multiple download locations">
+{
+  <span class="comment">// URLs that can be used to retrieve the data</span>
+  "url": [
+    "https://website.example/file.dat",
+    "cs2lu5ur23jxop4...p3k262uwy4sseqds.onion/file.dat",
+    "ipfs://QmJbTy8w65yBXgyCQFJGkARStfB2hPjrDQH3RG2ZBg5Trf"
+  ],
+  <span class="comment">// The media type of the file</span>
+  "mediaType": "application/octet-stream",
+  <span class="comment">// a cryptographic digest of the file (sha2-256 base64-url-nopad)</span>
+  "digestMultibase": "uEQ6YVtUmER8pN24iwLZcLK9EBguM5WZlbAgfXBDuQAkoYy"
+}
+        </pre>
+
+      </section>
+
+      <section class="normative">
         <h2>Event Log</h2>
 
         <p>
@@ -296,16 +357,44 @@ format:
           </thead>
           <tbody>
             <tr>
-              <td>event</td>
+              <td>log</td>
               <td>
+A REQUIRED property whose value is a [=list=] of one or more entries that
+conform to the following format:
+                <table class="simple">
+                  <thead>
+                    <tr>
+                      <th style="white-space: nowrap">Property</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>event</td>
+                      <td>
 A REQUIRED property whose value conforms to the data structure defined in
 Section [[[#event-entry]]].
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>proof</td>
+                      <td>
+A REQUIRED property whose value conforms to a [=data integrity proof=]
+as defined by the [[VC-DATA-INTEGRITY]] specification. [=Conforming processors=]
+MUST support at least the `ecdsa-jcs-2019` cryptosuite as defined by the
+[[[VC-DI-ECDSA]]] specification.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </td>
             </tr>
             <tr>
-              <td>proof</td>
+              <td>previousLog</td>
               <td>
-A REQUIRED property whose value conforms to a [=data integrity proof=]
+An OPTIONAL property whose value MUST conform to an external reference
+as defined in Section [[[#external-reference]]]. The value MUST also contain
+a `proof` property whose value conforms to a [=data integrity proof=]
 as defined by the [[VC-DATA-INTEGRITY]] specification. [=Conforming processors=]
 MUST support at least the `ecdsa-jcs-2019` cryptosuite as defined by the
 [[[VC-DI-ECDSA]]] specification.
@@ -314,22 +403,56 @@ MUST support at least the `ecdsa-jcs-2019` cryptosuite as defined by the
           </tbody>
         </table>
 
-        <p>
+        <pre class="example nohighlight" title="An event log containing multiple events">
+{
+  "log": {
+    "event": {...}, <span class="comment">// the first event in the event log</span>
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the event</span>
+    }, {
+    "event": {...}, <span class="comment">// the second event</span>
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the second event</span>
+    }, {
+    "event": {...}, <span class="comment">// the third event</span>
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the third event</span>
+  }
+}]
+        </pre>
 
+        <p>
+Event logs have a default minimum size of 1MB and a maximum size of 10MB which
+can be overridden by extension specifications. To support chunking, the
+`previousLog` property is provided to ensure that arbitrarily long
+change histories are supported.
         </p>
 
         <pre class="example nohighlight" title="An event log containing multiple events">
-[{
-  "event": {...}, <span class="comment">// the first event in the event log</span>
-  "proof": [...]  <span class="comment">// a list of proofs securing the event</span>
-  }, {
-  "event": {...}, <span class="comment">// the second event</span>
-  "proof": [...]  <span class="comment">// a list of proofs securing the second event</span>
-  }, {
-  "event": {...}, <span class="comment">// the third event</span>
-  "proof": [...]  <span class="comment">// a list of proofs securing the third event</span>
+{
+  "previousLog" : {
+    <span class="comment">// URLs that can be used to retrieve the previous event log</span>
+    "url": [
+      "https://website.example/log123.cel",
+      "3jxop4cs2lu5ur2...sseqdsp3k262uwy4.onion/log123.cel",
+      "ipfs://QmCQFJGkARStJbTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3R"
+    ],
+    <span class="comment">// The media type of the associated with the previous log</span>
+    "mediaType": "application/cel",
+    <span class="comment">// a cryptographic digest of the previous log (sha2-256 base64-url-nopad)</span>
+    "digestMultibase": "uEiwLZcLK9EBguM5WZlbAgfXBDuQAkoYyQ6YVtUmER8pN24"
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the previous event log</span>
+  },
+  "log": {
+    "event": {...}, <span class="comment">// the first event in the event log</span>
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the event</span>
+    }, {
+    "event": {...}, <span class="comment">// the second event</span>
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the second event</span>
+    }, {
+    "event": {...}, <span class="comment">// the third event</span>
+    "proof": [...]  <span class="comment">// a list of witness proofs securing the third event</span>
+  }
 }]
         </pre>
+
 
       </section>
 
@@ -375,41 +498,8 @@ MUST NOT be specified.
               <td>
 An OPTIONAL property whose value contains a reference and cryptographic hash
 to the data being secured. If this property is specified, the `data` property
-MUST NOT be specified. The format for the value is defined below:
-
-                <table class="simple">
-                  <thead>
-                    <tr>
-                      <th style="white-space: nowrap">Property</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>url</td>
-                      <td>
-An OPTIONAL property whose value MUST be a [=list=] of one or more URLs that
-can be used to retrieve the data being secured. If no `url` value is specified,
-the mechanism used to retrieve the data is application-specific.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>mediaType</td>
-                      <td>
-An OPTIONAL property whose value MUST be a media type as defined by the
-[[[RFC6838]]].
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>digestMultibase</td>
-                      <td>
-A REQUIRED property whose value MUST be a <a
-data-cite="CONTROLLER-DOCUMENT#multibase-0">Multibase-encoded</a> (base64-url-nopad) <a
-data-cite="CONTROLLER-DOCUMENT#multihash">Multihash</a> (sha2-256) value.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+MUST NOT be specified. The format for the value is defined in
+Section [[[#external-reference]]].
               </td>
             </tr>
           </tbody>

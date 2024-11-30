@@ -539,6 +539,90 @@ The [=event witness=] performs their function by appending another
 
       </section>
 
+      <section class="normative">
+        <h2>Minimizing Event Logs</h2>
+
+        <p>
+Event logs that contain all data necessary to reconstruct the current state of
+data from an event log can be verbose, especially when many event witnesses are
+used. For these use cases, a compact format is provided that can be further
+compressed into a minimal binary CBOR stream. A minimum viable
+[=cryptographic event log=] is shown below:
+        </p>
+
+        <!--code><span class="vc-hash" data-hash-url="index.html"
+          data-hash-format="multihash sha2-256" /></code-->
+
+        <pre class="example nohighlight" title="A minimum viable cryptographic event log">
+[
+  {
+    "event": {
+      "type": "Create",
+      "dataReference": "uEiBfhmMyElIQPrulFu-5ETYVLgzyvoPsmxTMpEds7iQPBw",
+    "proof": [
+      "uEiAJEdA64FgSCB6yPqXIRU_x8hg5wcEwwvT-EfHxm44lCA",
+      "uEiD4MvIoKbDn7yHUl_G4ivWNtQZ6v8p2tfDvcRBJ2NQTVw",
+      "uEiDlAVvCcKUxn9XeLMOzDoJyLevPfX91pyi1Ry5l92pHsw"
+    ]
+  }, {
+    "event": {
+      "type": "Update",
+      "dataReference": "uEiCLcgmToC-2b9qCWNHZt3ouOcusg0U2pL9sdsusEuMCdQ",
+    "proof": [
+      "uEiCsH8n2phXA-tYy_bcTpuAMkWEDyiZLZyqv1PwehHCqsA",
+      "uEiDXyzlypk757_ZTKxRZINMUDZQPOInYcj6k_vj3ro--bw",
+      "uEiCqA7hqFj5THapravk_wh_ViKu6h8BC0uqhKoWTERLBZA"
+    ]
+  }
+]
+        </pre>
+
+        <p>
+The event log above (536 bytes) can be compressed to CBOR (317 bytes; 59%
+compression), where each [=event log entry=] has an overhead of roughly 19
+bytes (12% overhead). The event log above is shown below in CBOR Diagnostic
+notation format:
+        </p>
+
+        <pre class="example nohighlight" title="A minimum viable cryptographic event log">
+82                                      # array(2)    # Event log containing two events
+   A1                                   # map(1)      # first event object
+      01                                # unsigned(1) # event
+      A3                                # map(3)
+         02                             # unsigned(2) # type
+         66                             # text(6)
+            437265617465                # "Create"
+         03                             # unsigned(3) # digestMultibase
+         58 22                          # bytes(34)
+            12205F8663321252103EBBA516EFB91136152E0CF2BE83EC9B14CCA4476CEE240F07
+         04                             # unsigned(4) # proof
+         83                             # array(3)
+            58 22                       # bytes(34)
+               12200911D03AE05812081EB23EA5C8454FF1F21839C1C130C2F4FE11F1F19B8E2508
+            58 22                       # bytes(34)
+               1220F832F22829B0E7EF21D497F1B88AF58DB5067ABFCA76B5F0EF711049D8D41357
+            58 22                       # bytes(34)
+               1220E5015BC270A5319FD5DE2CC3B30E82722DEBCF7D7F75A728B5472E65F76A47B3
+   A1                                   # map(1)      # second event object
+      01                                # unsigned(1) # event
+      A3                                # map(3)
+         02                             # unsigned(2) # type
+         66                             # text(6)
+            557064617465                # "Update"
+         03                             # unsigned(3) # digestMultibase
+         58 22                          # bytes(34)
+            12208B720993A02FB66FDA8258D1D9B77A2E39CBAC834536A4BF6C76CBAC12E30275
+         04                             # unsigned(4) # proof
+         83                             # array(3)
+            58 22                       # bytes(34)
+               1220AC1FC9F6A615C0FAD632FDB713A6E00C916103CA264B672AAFD4FC1E8470AAB0
+            58 22                       # bytes(34)
+               1220D7CB3972A64EF9EFF6532B145920D3140D940F3889D8723EA4FEF8F7AE8FBE6F
+            58 22                       # bytes(34)
+               1220AA03B86A163E531DAA6B6AF93FC21FD588ABBA87C042D2EAA12A85931112C164
+        </pre>
+
+      </section>
 
     </section>
 

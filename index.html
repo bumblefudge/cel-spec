@@ -47,6 +47,7 @@
         //   normative statements:
         preProcess: [/*prepare_reqlist*/],
         postProcess: [
+          window.respecVc.createVcExamples
           /*add_reqlist_button*/
         ],
 
@@ -208,8 +209,8 @@ rewriting history, if they can gain an advantage in a decentralized system.
       <p>
 To prevent rewriting history, some decentralized systems have turned to
 centralized solutions to "witness" the log of events that change the underlying
-data. Centralized solutions tend to create problems with the power dynamics
-in an ecosystem and, unsurprisingly, centralized previously decentralized solutions.
+data. Centralized solutions tend to create problems with the power dynamics in
+an ecosystem and, unsurprisingly, centralize previously decentralized solutions.
       </p>
 
       <p>
@@ -217,10 +218,9 @@ Other decentralized systems have turned to solutions such as decentralized
 ledger technologies (also known as blockchains) to share the state of a system.
 Some of these decentralized solutions tend to create their own problems such as
 energy use that some view as excessive (proof of work) or an excessive
-centralization of capital (proof of stake). Decentralized solutions
-also tend to make some governments nervous and slow adoption due to the
-uncertainty associated with the political dynamic of the underlying
-cryptocurrency.
+centralization of capital (proof of stake). Decentralized solutions also tend to
+make some governments nervous and slow adoption due to the uncertainty
+associated with the political dynamic of the underlying cryptocurrency.
       </p>
 
       <p>
@@ -229,6 +229,18 @@ where a verifier depends on the controller of a particular piece of data,
 as well as external witnesses that they trust, to establish trust in the
 current state of a particular object in a decentralized system.
       </p>
+
+      <p class="issue" data-number="1" title="Cite prior art">
+A reader of this specification might presume that the authors are not aware of
+the 30+ years of prior art around time stamping services such as opentimestamps,
+cryptographically signing a transaction log, blockchains and decentralized
+ledgers, Tahoe LAFS, IPFS, and other technologies that provide something akin to
+what this specification defines. We probably need to have a section highlighting
+all the prior art in the space and what sets this specification apart. Readers
+of this specification are urged to provide citations to prior art that they feel
+apply.
+      </p>
+
 
       <section id="conformance">
         <p>
@@ -260,11 +272,66 @@ non-conforming documents are consumed.
       <h2>Data Model</h2>
 
       <p>
-A <dfn data-lt="event log">cryptographic event log</dfn> is a [=list=] of
-protected events that enable an author to express changes to a specific instance
-of data over time in a way that is tamper tamper-evident and that can be
-cryptographically verified by verifiers in a decentralized manner.
+This section defines the data model for expressing protected events that enable
+an author to express changes to a specific instance of data over time in a way
+that is tamper-evident and that can be cryptographically verified by
+verifiers in a decentralized manner.
       </p>
+
+      <section class="normative">
+        <h2>Event Log</h2>
+
+        <p>
+A <dfn data-lt="event log">cryptographic event log</dfn> is a [=list=] of
+protected events, where each [=event log entry=] adheres to the following
+format:
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>event</td>
+              <td>
+A REQUIRED property whose value conforms to the data structure defined in
+Section [[[#event-entry]]].
+              </td>
+            </tr>
+            <tr>
+              <td>proof</td>
+              <td>
+A REQUIRED property whose value conforms to a [=data integrity proof=]
+as defined by the [[VC-DATA-INTEGRITY]] specification. [=Conforming processors=]
+MUST support at least the `ecdsa-jcs-2019` cryptosuite as defined by the
+[[[VC-DI-ECDSA]]] specification.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+
+        </p>
+
+        <pre class="example nohighlight" title="An event log containing multiple events">
+[{
+  "event": {...}, <span class="comment">// the first event in the event log</span>
+  "proof": [...]  <span class="comment">// a list of proofs securing the event</span>
+  }, {
+  "event": {...}, <span class="comment">// the second event</span>
+  "proof": [...]  <span class="comment">// a list of proofs securing the second event</span>
+  }, {
+  "event": {...}, <span class="comment">// the third event</span>
+  "proof": [...]  <span class="comment">// a list of proofs securing the third event</span>
+}]
+        </pre>
+
+      </section>
 
       <section class="normative">
         <h2>Event Entry</h2>
@@ -274,8 +341,8 @@ A cryptographic <dfn data-lt="event entry">event log entry</dfn> is used to
 establish an event that can be independently verified by a verifier. The log
 entry MUST be composed of at least a single `event` and one or more associated
 `proof` values that can be used to verify the validity of the event. The `event`
-value is defined below  and MUST include either a `data` entry or a
-`dataReference` entry:
+value is defined below  and MUST include either a `data` property or a
+`dataReference` property:
         </p>
 
         <table class="simple">
@@ -329,7 +396,7 @@ the mechanism used to retrieve the data is application-specific.
                     <tr>
                       <td>mediaType</td>
                       <td>
-An OPTIONAL property whose value MUST be a media type as defined by
+An OPTIONAL property whose value MUST be a media type as defined by the
 [[[RFC6838]]].
                       </td>
                     </tr>
@@ -349,9 +416,8 @@ data-cite="CONTROLLER-DOCUMENT#multihash">Multihash</a> (sha2-256) value.
         </table>
 
         <p>
-A [=conforming processor=] MUST support `proof` values expressed using the
-[[[VC-DI-ECDSA]]] specification and the `ecdsa-jcs-2019` cryptosuite and
-MAY support other proof formats.
+An [=event log entry=] can contain all of the data necessary to reconstruct
+the current state of the data object:
         </p>
 
         <pre class="example nohighlight" title="An event log entry containing data embedded directly in the event.">
@@ -472,6 +538,7 @@ The [=event witness=] performs their function by appending another
         </pre>
 
       </section>
+
 
     </section>
 
@@ -691,6 +758,17 @@ Append |event| to |eventLog|.
 Return |eventLog|.
           </li>
         </ol>
+
+        <p class="issue" title="Patching semantics defined by Extension Specification">
+Different applications will have different ways in which they want to construct
+how the data entries relate to one another in a history of events. Some
+applications will prefer replacement semantics, where the entire object is
+provided in a self-contained manner for every change. Other applications will
+prefer patching semantics, where a patch set is provided as an update instead
+of the entire object. The state machine that applies event entries to the
+data object over time is specified by the extension specification and not
+this specification.
+        </p>
 
       </section>
 

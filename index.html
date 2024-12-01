@@ -233,13 +233,14 @@ particular object in a decentralized system.
 
       <p class="issue" data-number="1" title="Cite prior art">
 A reader of this specification might presume that the authors are not aware of
-the 30+ years of prior art around time stamping services such as opentimestamps,
+the 30+ years of prior art around time stamping and cryptographic log services
+such as <a href="https://opentimestamps.org/">opentimestamps.org</a>,
 cryptographically signing a transaction log, blockchains and decentralized
-ledgers, Tahoe LAFS, IPFS, and other technologies that provide something akin to
-what this specification defines. We probably need to have a section highlighting
-all the prior art in the space and what sets this specification apart. Readers
-of this specification are urged to provide citations to prior art that they feel
-apply.
+ledgers, Tahoe LAFS, did:peer, Trusted DID Web's log, did:dht, IPFS, and other
+technologies that provide technologies similar to what this specification
+provides. We probably need to have a section highlighting all the prior art in
+the space and what sets this specification apart. Readers of this specification
+are urged to provide citations to prior art that they feel apply.
       </p>
 
       <section id="conformance">
@@ -279,67 +280,6 @@ verifiers in a decentralized manner.
       </p>
 
       <section class="normative">
-        <h2>External Reference</h2>
-
-        <p>
-An external reference points to data outside of the event log in a way
-that is cryptographically verifiable. The reference can provide a list of
-URLs where the data can be retrieved, a media type to use when performing
-the data retrieval, and a cryptographic hash of the data.
-        </p>
-
-        <table class="simple">
-          <thead>
-            <tr>
-              <th style="white-space: nowrap">Property</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>url</td>
-              <td>
-An OPTIONAL property whose value MUST be a [=list=] of one or more URLs that
-can be used to retrieve the data being secured. If no `url` value is specified,
-the mechanism used to retrieve the data is application-specific.
-              </td>
-            </tr>
-            <tr>
-              <td>mediaType</td>
-              <td>
-An OPTIONAL property whose value MUST be a media type as defined by the
-[[[RFC6838]]].
-              </td>
-            </tr>
-            <tr>
-              <td>digestMultibase</td>
-              <td>
-A REQUIRED property whose value MUST be a <a
-data-cite="CONTROLLER-DOCUMENT#multibase-0">Multibase-encoded</a> (base64-url-nopad) <a
-data-cite="CONTROLLER-DOCUMENT#multihash">Multihash</a> (sha2-256) value.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <pre class="example nohighlight" title="An external reference to a file containing multiple download locations">
-{
-  <span class="comment">// URLs that can be used to retrieve the data</span>
-  "url": [
-    "https://website.example/file.dat",
-    "cs2lu5ur23jxop4...p3k262uwy4sseqds.onion/file.dat",
-    "ipfs://QmJbTy8w65yBXgyCQFJGkARStfB2hPjrDQH3RG2ZBg5Trf"
-  ],
-  <span class="comment">// The media type of the file</span>
-  "mediaType": "application/octet-stream",
-  <span class="comment">// a cryptographic digest of the file (sha2-256 base64-url-nopad)</span>
-  "digestMultibase": "uEQ6YVtUmER8pN24iwLZcLK9EBguM5WZlbAgfXBDuQAkoYy"
-}
-        </pre>
-
-      </section>
-
-      <section class="normative">
         <h2>Event Log</h2>
 
         <p>
@@ -350,14 +290,14 @@ witnessed events. The log follows the following basic structure:
         <pre class="example nohighlight" title="An event log containing multiple events">
 {
   "log": [{
-    "event": {...}, <span class="comment">// the first event in the event log</span>
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the event</span>
+    "event": {<span class="comment">...</span>}, <span class="comment">// the first event in the event log</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the event</span>
     }, {
-    "event": {...}, <span class="comment">// the second event</span>
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the second event</span>
+    "event": {<span class="comment">...</span>}, <span class="comment">// the second event</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the second event</span>
     }, {
-    "event": {...}, <span class="comment">// the third event</span>
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the third event</span>
+    "event": {<span class="comment">...</span>}, <span class="comment">// the third event</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the third event</span>
   }]
 }
         </pre>
@@ -434,28 +374,88 @@ arbitrarily long change histories are supported.
     <span class="comment">// URLs that can be used to retrieve the previous event log</span>
     "url": [
       "https://website.example/log123.cel",
-      "3jxop4cs2lu5ur2...sseqdsp3k262uwy4.onion/log123.cel",
+      "3jxop4cs2lu5ur2<span class="comment">...</span>sseqdsp3k262uwy4.onion/log123.cel",
       "ipfs://QmCQFJGkARStJbTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3R"
     ],
-    <span class="comment">// The media type of the associated with the previous log</span>
+    <span class="comment">// The media type associated with the previous log</span>
     "mediaType": "application/cel",
     <span class="comment">// a cryptographic digest of the previous log (sha2-256 base64-url-nopad)</span>
     "digestMultibase": "uEiwLZcLK9EBguM5WZlbAgfXBDuQAkoYyQ6YVtUmER8pN24"
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the previous event log</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the previous event log</span>
   },
   "log": {
-    "event": {...}, <span class="comment">// the first event in the event log</span>
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the event</span>
+    "event": {<span class="comment">...</span>}, <span class="comment">// the first event in the event log</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the event</span>
     }, {
-    "event": {...}, <span class="comment">// the second event</span>
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the second event</span>
+    "event": {<span class="comment">...</span>}, <span class="comment">// the second event</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the second event</span>
     }, {
-    "event": {...}, <span class="comment">// the third event</span>
-    "proof": [...]  <span class="comment">// a list of witness proofs securing the third event</span>
+    "event": {<span class="comment">...</span>}, <span class="comment">// the third event</span>
+    "proof": [<span class="comment">...</span>]  <span class="comment">// a list of witness proofs securing the third event</span>
   }
 }]
         </pre>
 
+      </section>
+
+      <section class="normative">
+        <h2>External Reference</h2>
+
+        <p>
+An external reference points to data outside of the event log in a way
+that is cryptographically verifiable. The reference can provide a list of
+URLs where the data can be retrieved, a media type to use when performing
+the data retrieval, and a cryptographic hash of the data.
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>url</td>
+              <td>
+An OPTIONAL property whose value MUST be a [=list=] of one or more URLs that
+can be used to retrieve the data being secured. If no `url` value is specified,
+the mechanism used to retrieve the data is application-specific.
+              </td>
+            </tr>
+            <tr>
+              <td>mediaType</td>
+              <td>
+An OPTIONAL property whose value MUST be a media type as defined by the
+[[[RFC6838]]].
+              </td>
+            </tr>
+            <tr>
+              <td>digestMultibase</td>
+              <td>
+A REQUIRED property whose value MUST be a <a
+data-cite="CONTROLLER-DOCUMENT#multibase-0">Multibase-encoded</a> (base64-url-nopad) <a
+data-cite="CONTROLLER-DOCUMENT#multihash">Multihash</a> (sha2-256) value.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <pre class="example nohighlight" title="An external reference to a file containing multiple download locations">
+{
+  <span class="comment">// URLs that can be used to retrieve the data</span>
+  "url": [
+    "https://website.example/file.dat",
+    "cs2lu5ur23jxop4<span class="comment">...</span>p3k262uwy4sseqds.onion/file.dat",
+    "ipfs://QmJbTy8w65yBXgyCQFJGkARStfB2hPjrDQH3RG2ZBg5Trf"
+  ],
+  <span class="comment">// The media type of the file</span>
+  "mediaType": "application/octet-stream",
+  <span class="comment">// a cryptographic digest of the file (sha2-256 base64-url-nopad)</span>
+  "digestMultibase": "uEQ6YVtUmER8pN24iwLZcLK9EBguM5WZlbAgfXBDuQAkoYy"
+}
+        </pre>
 
       </section>
 
@@ -463,12 +463,11 @@ arbitrarily long change histories are supported.
         <h2>Event Entry</h2>
 
         <p>
-A cryptographic <dfn data-lt="event entry">event log entry</dfn> is used to
-establish an event that can be independently authenticated by a verifier. The log
-entry MUST be composed of at least a single `event` and one or more associated
-`proof` values that can be used to verify the validity of the event. The `event`
-value is defined below and MUST include either a `data` property or a
-`dataReference` property:
+A <dfn data-lt="log entry">cryptographic event log entry</dfn> is used to
+establish an event that can be independently authenticated by a verifier. The
+[=log entry=] MUST be composed of at least a single `event` and one or more
+associated `proof` values that can be used to verify the validity of the event.
+
         </p>
 
         <table class="simple">
@@ -483,7 +482,8 @@ value is defined below and MUST include either a `data` property or a
               <td>operation</td>
               <td>
 A REQUIRED property that captures an operation that was observed during the
-event that conforms to the following data format:
+event. The `operation` value MUST include either a `data` property or
+a `dataReference` property and MUST conform to the following data format:
                 <table class="simple">
                   <thead>
                     <tr>
@@ -534,66 +534,72 @@ event immediately preceding this event.
         </table>
 
         <p>
-The example below shows the first [=event log entry=] containing a `create`
+The example below shows the first [=log entry=] containing a `create`
 operation:
         </p>
 
         <pre class="example nohighlight" title="An initial event log entry containing data embedded directly in the event.">
 {
-  "event": {
-    <span class="comment">// the cryptographic hash of the previous event</span>
-    "previousEvent": "uEBguM5WZlbAgfXBDuQiAkoYyQ6YVtUmER8pN24wLZcLK9E",
-    "operation": {
-      <span class="comment">// the type of operation observed by the event</span>
-      "type": "create",
-      <span class="comment">// the data associated with the event (in JSON format)</span>
-      "data": {
-        "name": "Hello World!",
-        <span class="comment">// one or more proofs that secure the integrity of the event above</span>
-        "proof": {
-          "type": "DataIntegrityProof",
-          "cryptosuite": "ecdsa-jcs-2019",
-          "created": "2024-11-29T13:56:28Z",
-          <span class="comment">// the cryptographic authority for the data is application specific</span>
-          <span class="comment">// in this example, it is established by the proof in the create operation</span>
-          "verificationMethod": "https://website.example/crypto#key-1",
-          "proofPurpose": "assertionMethod",
-          "proofValue": "zq6PrUMCtqY5obCSsrQxuFJd...wVWgHYrXxoV93gBHqGDBtQLPFxpZxz"
+  "log": [{
+    "event": {
+      <span class="comment">// the cryptographic hash of the previous event</span>
+      "previousEvent": "uEBguM5WZlbAgfXBDuQiAkoYyQ6YVtUmER8pN24wLZcLK9E",
+      "operation": {
+        <span class="comment">// the type of operation observed by the event</span>
+        "type": "create",
+        <span class="comment">// the data associated with the event (in JSON format)</span>
+        "data": {
+          "name": "Hello World!",
+          <span class="comment">// one or more proofs that secure the integrity of the event above</span>
+          "proof": {
+            "type": "DataIntegrityProof",
+            "cryptosuite": "ecdsa-jcs-2019",
+            "created": "2024-11-29T13:56:28Z",
+            <span class="comment">// the cryptographic authority for the data is application specific</span>
+            <span class="comment">// in this example, it is established by the proof in the create operation</span>
+            "verificationMethod": "https://website.example/crypto#key-1",
+            "proofPurpose": "assertionMethod",
+            "proofValue": "zq6PrUMCtqY5obCSsrQxuFJd<span class="comment">...</span>wVWgHYrXxoV93gBHqGDBtQLPFxpZxz"
+          }
         }
       }
     }
-  }
+  }]
 }
         </pre>
 
         <p>
-The example below shows the second [=event log entry=] containing an `update`
+The example below shows the second [=log entry=] containing an `update`
 operation that refers to the previous example via the `previousEvent` property:
         </p>
 
 
         <pre class="example nohighlight" title="An event log entry containing data embedded directly in the event.">
 {
-  "event": {
-    <span class="comment">// the cryptographic hash of the previous event</span>
-    "previousEvent": "uEBguM5WZlbAgfXBDuQiAkoYyQ6YVtUmER8pN24wLZcLK9E",
-    "operation": {
-      <span class="comment">// the type of operation is an "update"</span>
-      "type": "update",
-      "data": {
-        <span class="comment">// the "name" value is changed in the update</span>
-        "name": "Updated Hello World!",
-        "proof": {
-          "type": "DataIntegrityProof",
-          "cryptosuite": "ecdsa-jcs-2019",
-          "created": "2024-11-30T11:29:11Z",
-          "verificationMethod": "https://website.example/crypto#key-1",
-          "proofPurpose": "assertionMethod",
-          "proofValue": "zqY5obCSsrQxuFJdq6PrUMCt...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+  "log": [{
+    <span class="comment">... // first event log entry</span>
+  }, {
+    "event": {
+      <span class="comment">// the cryptographic hash of the previous event</span>
+      "previousEvent": "uEBguM5WZlbAgfXBDuQiAkoYyQ6YVtUmER8pN24wLZcLK9E",
+      "operation": {
+        <span class="comment">// the type of operation is an "update"</span>
+        "type": "update",
+        "data": {
+          <span class="comment">// the "name" value is changed in the update</span>
+          "name": "Updated Hello World!",
+          "proof": {
+            "type": "DataIntegrityProof",
+            "cryptosuite": "ecdsa-jcs-2019",
+            "created": "2024-11-30T11:29:11Z",
+            "verificationMethod": "https://website.example/crypto#key-1",
+            "proofPurpose": "assertionMethod",
+            "proofValue": "zqY5obCSsrQxuFJdq6PrUMCt<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+          }
         }
       }
     }
-  }
+  }]
 }
         </pre>
 
@@ -606,24 +612,26 @@ multiple URLs for a verifier to use when retrieving the external data.
 
         <pre class="example nohighlight" title="An event log entry containing a reference to data.">
 {
-  "event": {
-    "operation": {
-      "type": "create",
-      <span class="comment">// a reference to the data associated with the event</span>
-      "dataReference": {
-        <span class="comment">// URLs that can be used to retrieve the data</span>
-        "url": [
-          "https://website.example/file.dat",
-          "3jxop4cs2lu5ur2...sseqdsp3k262uwy4.onion/file.dat",
-          "ipfs://QmTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3RCQFJGkARStJb"
-        ],
-        <span class="comment">// The media type of the associated data</span>
-        "mediaType": "application/octet-stream",
-        <span class="comment">// a cryptographic digest of the data (sha2-256 base64-url-nopad)</span>
-        "digestMultibase": "uEiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQ"
+  "log": [{
+    "event": {
+      "operation": {
+        "type": "create",
+        <span class="comment">// a reference to the data associated with the event</span>
+        "dataReference": {
+          <span class="comment">// URLs that can be used to retrieve the data</span>
+          "url": [
+            "https://website.example/file.dat",
+            "3jxop4cs2lu5ur2<span class="comment">...</span>sseqdsp3k262uwy4.onion/file.dat",
+            "ipfs://QmTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3RCQFJGkARStJb"
+          ],
+          <span class="comment">// The media type of the associated data</span>
+          "mediaType": "application/octet-stream",
+          <span class="comment">// a cryptographic digest of the data (sha2-256 base64-url-nopad)</span>
+          "digestMultibase": "uEiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQ"
+        }
       }
     }
-  }
+  }]
 }
         </pre>
 
@@ -641,38 +649,41 @@ see the data, but confirm the existence of the data.
         </p>
 
         <p>
-The [=event witness=] performs their function by appending another
-[=data integrity proof=] onto the array of `proof` values.
+The [=event witness=] performs their function by providing a [=data integrity
+proof=] for a particular event digest. The log controller then appends the
+proof onto the array of `proof` values.
         </p>
 
         <pre class="example nohighlight" title="An event log entry containing a reference to data.">
 {
-  "event": {
-    "operation": {
-      "type": "create",
-      <span class="comment">// a reference to the data associated with the event</span>
-      "dataReference": {
-        <span class="comment">// URLs that can be used to retrieve the data</span>
-        "url": [
-          "https://website.example/file.dat",
-          "3jxop4cs2lu5ur2...sseqdsp3k262uwy4.onion/file.dat",
-          "ipfs://QmTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3RCQFJGkARStJb"
-        ],
-        <span class="comment">// The media type of the associated data</span>
-        "mediaType": "application/octet-stream",
-        <span class="comment">// a cryptographic digest of the data (sha2-256 base64-url-nopad)</span>
-        "digestMultibase": "uEiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQ"
+  "log": [{
+    "event": {
+      "operation": {
+        "type": "create",
+        <span class="comment">// a reference to the data associated with the event</span>
+        "dataReference": {
+          <span class="comment">// URLs that can be used to retrieve the data</span>
+          "url": [
+            "https://website.example/file.dat",
+            "3jxop4cs2lu5ur2<span class="comment">...</span>sseqdsp3k262uwy4.onion/file.dat",
+            "ipfs://QmTy8w65yBXgyfG2ZBg5TrfB2hPjrDQH3RCQFJGkARStJb"
+          ],
+          <span class="comment">// The media type of the associated data</span>
+          "mediaType": "application/octet-stream",
+          <span class="comment">// a cryptographic digest of the data (sha2-256 base64-url-nopad)</span>
+          "digestMultibase": "uEiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQ"
+        }
       }
-    }
-  },
-  <span class="comment">// one or more proofs that witness the event above</span>
-  "proof": [{
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-29T13:56:45Z",
-    "verificationMethod": "https://witness.example/attestation#key-P8",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    },
+    <span class="comment">// one or more proofs that witness the event above</span>
+    "proof": [{
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2024-11-29T13:56:45Z",
+      "verificationMethod": "https://witness.example/attestation#key-P8",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    }]
   }]
 }
         </pre>
@@ -697,8 +708,10 @@ compressed into a minimal binary CBOR stream. A minimum viable
 {
   "log": [{
     "event": {
-      "type": "create",
-      "dataReference": "uEiBfhmMyElIQPrulFu-5ETYVLgzyvoPsmxTMpEds7iQPBw"
+      "operation": {
+        "type": "create",
+        "dataReference": "uEiBfhmMyElIQPrulFu-5ETYVLgzyvoPsmxTMpEds7iQPBw"
+      }
     },
     "proof": [
       "uEiAJEdA64FgSCB6yPqXIRU_x8hg5wcEwwvT-EfHxm44lCA",
@@ -707,37 +720,43 @@ compressed into a minimal binary CBOR stream. A minimum viable
     ]
   }, {
     "event": {
-      "type": "update",
       "previousEvent": "uEcusg0U2pL9sdsusEuMCdQiCLcgmToC-2b9qCWNHZt3ouO",
-      "dataReference": "uEiCLcgmToC-2b9qCWNHZt3ouOcusg0U2pL9sdsusEuMCdQ"
+      "operation": {
+        "type": "update",
+        "dataReference": "uEiCLcgmToC-2b9qCWNHZt3ouOcusg0U2pL9sdsusEuMCdQ"
+      }
     },
     "proof": [
       "uEiCsH8n2phXA-tYy_bcTpuAMkWEDyiZLZyqv1PwehHCqsA",
       "uEiDXyzlypk757_ZTKxRZINMUDZQPOInYcj6k_vj3ro--bw",
       "uEiCqA7hqFj5THapravk_wh_ViKu6h8BC0uqhKoWTERLBZA"
+    ]
   }]
 }
         </pre>
 
         <p>
-The event log above (536 bytes) can be compressed to CBOR (317 bytes; 59%
-compression), where each [=event log entry=] has an overhead of roughly 19
+The event log above (651 bytes) can be compressed to CBOR (350 bytes; 53%
+compression), where each [=log entry=] has an overhead of roughly 19
 bytes (12% overhead). The event log above is shown below in CBOR Diagnostic
 notation format:
         </p>
 
         <pre class="example nohighlight" title="A minimum viable cryptographic event log">
-82                                      # array(2)    # Event log containing two events
-   A1                                   # map(1)      # first event object
-      01                                # unsigned(1) # event
-      A3                                # map(3)
-         02                             # unsigned(2) # type
-         66                             # text(6)
-            437265617465                # "create"
-         03                             # unsigned(3) # digestMultibase
-         58 22                          # bytes(34)
-            12205F8663321252103EBBA516EFB91136152E0CF2BE83EC9B14CCA4476CEE240F07
-         04                             # unsigned(4) # proof
+A1                                      # map(1)
+   20                                   # log
+   82                                   # array(2)
+      A2                                # map(2)
+         21                             # event
+         A1                             # map(1)
+            22                          # negative(2)
+            A2                          # map(2)
+               23                       # type
+               38 63                    # create
+               24                       # dataReference
+               58 22                    # bytes(34)
+                  12205F8663321252103EBBA516EFB91136152E0CF2BE83EC9B14CCA4476CEE240F07
+         26                             # proof
          83                             # array(3)
             58 22                       # bytes(34)
                12200911D03AE05812081EB23EA5C8454FF1F21839C1C130C2F4FE11F1F19B8E2508
@@ -745,16 +764,20 @@ notation format:
                1220F832F22829B0E7EF21D497F1B88AF58DB5067ABFCA76B5F0EF711049D8D41357
             58 22                       # bytes(34)
                1220E5015BC270A5319FD5DE2CC3B30E82722DEBCF7D7F75A728B5472E65F76A47B3
-   A1                                   # map(1)      # second event object
-      01                                # unsigned(1) # event
-      A3                                # map(3)
-         02                             # unsigned(2) # type
-         66                             # text(6)
-            557064617465                # "update"
-         03                             # unsigned(3) # digestMultibase
-         58 22                          # bytes(34)
-            12208B720993A02FB66FDA8258D1D9B77A2E39CBAC834536A4BF6C76CBAC12E30275
-         04                             # unsigned(4) # proof
+      A2                                # map(2)
+         21                             # negative(1)
+         A2                             # map(2)
+            25                          # previousEvent
+            58 22                       # bytes(34)
+               11CBAC834536A4BF6C76CBAC12E3027508822DC8264E80BED9BF6A09634766DDE8B8
+            22                          # negative(2)
+            A2                          # map(2)
+               23                       # type
+               38 64                    # update
+               24                       # dataReference
+               58 22                    # bytes(34)
+                  12208B720993A02FB66FDA8258D1D9B77A2E39CBAC834536A4BF6C76CBAC12E30275
+         26                             # proof
          83                             # array(3)
             58 22                       # bytes(34)
                1220AC1FC9F6A615C0FAD632FDB713A6E00C916103CA264B672AAFD4FC1E8470AAB0
@@ -787,6 +810,9 @@ possibility. We're going to start out with JSON, see how far it gets us, and
 see if the pro-CBOR community would be willing to trade CPU cycles to
 convert to/from CBOR from JSON (ensuring a stable round-tripping). The number
 of fields we'd have to pick CBOR values for is minimal.
+<br><br>
+An approach for a bi-directional mapping is provided in Section
+[[[#minimizing-event-logs]]].
       </p>
 
       <section class="normative">
@@ -795,6 +821,9 @@ of fields we'd have to pick CBOR values for is minimal.
       <p class="issue" title="Default representation is JSON">
 The default representation for a [=cryptographic event log=] is JSON. That
 might change if we get enough developer feedback to use CBOR.
+<br><br>
+An approach for a bi-directional mapping is provided in Section
+[[[#minimizing-event-logs]]].
       </p>
 
       </section>
@@ -807,6 +836,9 @@ The default representation for a [=cryptographic event log=] is JSON. That
 might change if we get enough developer feedback to use CBOR. The alternative
 is to provide a bi-directional mapping to CBOR which reduces storage
 requirements.
+<br><br>
+An approach for a bi-directional mapping is provided in Section
+[[[#minimizing-event-logs]]].
       </p>
       </section>
 
@@ -866,7 +898,7 @@ decentralization and security.
 
         <p>
 Required inputs are an [=event log=] ([=map=] inputEventLog), and
-[=event entry=] ([=map=] |inputEvent|) and a set of
+[=log entry=] ([=map=] |inputEvent|) and a set of
 options ([=map=] |options|). An [=event log=] ([=map=]), or an error,
 is produced as output.
         </p>
@@ -917,8 +949,8 @@ valid [=data integrity proof=].
         </p>
 
         <p>
-Required inputs are an [=event entry=] ([=map=] |inputEvent|) and a set of
-options ([=map=] |options|). An [=event entry=] ([=map=]), or an error,
+Required inputs are an [=log entry=] ([=map=] |inputEvent|) and a set of
+options ([=map=] |options|). An [=log entry=] ([=map=]), or an error,
 is produced as output.
         </p>
 
@@ -1082,7 +1114,7 @@ Return |true|.
     <section class="normative">
       <h2>Application Specifications</h2>
 
-      <p class="issue" title="Contains sample [=application specification=]s">
+      <p class="issue" title="Contains sample application specifications">
 This section contains sample [=application specification=]s and how different
 ecosystems would use this specification to achieve cryptographic event logs
 for the applications in their ecosystem.
@@ -1149,93 +1181,105 @@ nations cannot bring themselves to run such services, private industry will
 likely also operate witnessing services.
         </p>
 
-        <pre class="example nohighlight" title="Example of a DID Document that has performed a key rotation">
-[{
-  "event": {
-    "type": "create",
-    "data": {
-      "@context": "https://www.w3.org/ns/did/v1.1",
-      "id": "did:example:",
-      "verificationMethod": [{
-        "id": "#key-1",
-        "type": "Multikey",
-        "controller": "did:example",
-        "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
-      }],
-      "authentication": ["#key-1"],
-      "assertionMethod": ["#key-1"],
-      "capabilityDelegation": [],
-      "capabilityInvocation": []
-    }
-  },
-  "proof": [{
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-29T13:56:28Z",
-    "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+        <pre class="example nohighlight" title="Example of a DID Document that has added a verification method">
+{
+  "log": [{
+    "event": {
+      "operation": {
+        "type": "create",
+        "data": {
+          <span class="comment">// the DID is established by cryptographically digesting this object</span>
+          <span class="comment">// before the proof property is added</span>
+          "@context": "https://www.w3.org/ns/did/v1.1",
+          "id": "did:example:",
+          "verificationMethod": [{
+            "id": "#key-1",
+            "type": "Multikey",
+            "controller": "did:example",
+            "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
+          }],
+          "authentication": ["#key-1"],
+          "assertionMethod": ["#key-1"],
+          "capabilityDelegation": [],
+          "capabilityInvocation": []
+          <span class="comment">// this proof establishes the controller of the DID Document</span>
+          "proof": {
+            "type": "DataIntegrityProof",
+            "cryptosuite": "ecdsa-jcs-2019",
+            "created": "2024-11-29T13:56:28Z",
+            "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+            "proofPurpose": "assertionMethod",
+            "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+          }
+        }
+      }
+    },
+    <span class="comment">// these proofs establish the witnesses on the creation of the DID Document</span>
+    "proof": [{
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2024-11-29T13:56:45Z",
+      "verificationMethod": "https://rednation.example/attestations#key-5W",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    }, {
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2024-11-29T13:56:49Z",
+      "verificationMethod": "https://bluenation.example/witnesses#key-Z2",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    }]
   }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-29T13:56:45Z",
-    "verificationMethod": "https://rednation.example/attestations#key-5W",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
-  }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-29T13:56:49Z",
-    "verificationMethod": "https://bluenation.example/witnesses#key-Z2",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    "event": {
+      "type": "update",
+      "data": {
+        "@context": "https://www.w3.org/ns/did/v1.1",
+        "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+        "verificationMethod": [{
+          "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+          "type": "Multikey",
+          "controller": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+          "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
+        }, {
+          "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2",
+          "type": "Multikey",
+          "controller": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+          "publicKeyMultibase": "z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP"
+        }],
+        "authentication": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1"],
+        "assertionMethod": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
+        "capabilityDelegation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
+        "capabilityInvocation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"]
+        <span class="comment">// this proof confirms that the controller approves of the DID Document update</span>
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "ecdsa-jcs-2019",
+          "created": "2024-11-30T17:03:42Z",
+          "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+        }
+      }
+    },
+    <span class="comment">// these proofs establish the witnesses on the DID Document update</span>
+    "proof": [{
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2024-11-30T17:03:49Z",
+      "verificationMethod": "https://rednation.example/attestations#key-5W",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    }, {
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2024-11-30T17:03:57Z",
+      "verificationMethod": "https://bluenation.example/witnesses#key-Z2",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    }]
   }]
-}, {
-  "event": {
-    "type": "update",
-    "data": {
-      "@context": "https://www.w3.org/ns/did/v1.1",
-      "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
-      "verificationMethod": [{
-        "id": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
-        "type": "Multikey",
-        "controller": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
-        "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
-      }, {
-        "id": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2",
-        "type": "Multikey",
-        "controller": "https://did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
-        "publicKeyMultibase": "z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP"
-      }],
-      "authentication": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1"],
-      "assertionMethod": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
-      "capabilityDelegation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
-      "capabilityInvocation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"]
-    }
-  },
-  "proof": [{
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-30T17:03:42Z",
-    "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
-  }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-30T17:03:49Z",
-    "verificationMethod": "https://rednation.example/attestations#key-5W",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
-  }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2024-11-30T17:03:57Z",
-    "verificationMethod": "https://bluenation.example/witnesses#key-Z2",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
-  }]
-}]
+}
         </pre>
       </section>
 
@@ -1298,21 +1342,21 @@ without the need for centralized time-stamping services for either network.
     "created": "2025-02-10T15:04:55Z",
     "verificationMethod": "https://personal.example/mallory#key-1",
     "proofPurpose": "assertionMethod",
-    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
   }, {
     "type": "DataIntegrityProof",
     "cryptosuite": "ecdsa-jcs-2019",
     "created": "2025-02-10T15:05:02Z",
     "verificationMethod": "https://redsocial.example/attestations#key-5W",
     "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
   }, {
     "type": "DataIntegrityProof",
     "cryptosuite": "ecdsa-jcs-2019",
     "created": "2025-02-10T15:05:08Z",
     "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
     "proofPurpose": "assertionMethod",
-    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
   }]
 }, {
   "event": {
@@ -1333,21 +1377,21 @@ without the need for centralized time-stamping services for either network.
     "created": "2025-02-10T15:07:15Z",
     "verificationMethod": "https://personal.example/mallory#key-1",
     "proofPurpose": "assertionMethod",
-    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY...93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
   }, {
     "type": "DataIntegrityProof",
     "cryptosuite": "ecdsa-jcs-2019",
     "created": "2025-02-10T15:07:19Z",
     "verificationMethod": "https://redsocial.example/attestations#key-5W",
     "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF...tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
   }, {
     "type": "DataIntegrityProof",
     "cryptosuite": "ecdsa-jcs-2019",
     "created": "2025-02-10T15:07:26Z",
     "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
     "proofPurpose": "assertionMethod",
-    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC...zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
   }]
 }]
         </pre>

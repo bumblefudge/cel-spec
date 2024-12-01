@@ -1232,33 +1232,36 @@ likely also operate witnessing services.
     }]
   }, {
     "event": {
-      "type": "update",
-      "data": {
-        "@context": "https://www.w3.org/ns/did/v1.1",
-        "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
-        "verificationMethod": [{
-          "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
-          "type": "Multikey",
-          "controller": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
-          "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
-        }, {
-          "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2",
-          "type": "Multikey",
-          "controller": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
-          "publicKeyMultibase": "z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP"
-        }],
-        "authentication": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1"],
-        "assertionMethod": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
-        "capabilityDelegation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
-        "capabilityInvocation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"]
-        <span class="comment">// this proof confirms that the controller approves of the DID Document update</span>
-        "proof": {
-          "type": "DataIntegrityProof",
-          "cryptosuite": "ecdsa-jcs-2019",
-          "created": "2024-11-30T17:03:42Z",
-          "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
-          "proofPurpose": "assertionMethod",
-          "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+      "previousEvent": "uEkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAgfXBDuQiA"
+      "operation": {
+        "type": "update",
+        "data": {
+          "@context": "https://www.w3.org/ns/did/v1.1",
+          "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+          "verificationMethod": [{
+            "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+            "type": "Multikey",
+            "controller": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+            "publicKeyMultibase": "zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"
+          }, {
+            "id": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2",
+            "type": "Multikey",
+            "controller": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv",
+            "publicKeyMultibase": "z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP"
+          }],
+          "authentication": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1"],
+          "assertionMethod": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
+          "capabilityDelegation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"],
+          "capabilityInvocation": ["did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-2"]
+          <span class="comment">// this proof confirms that the controller approves of the DID Document update</span>
+          "proof": {
+            "type": "DataIntegrityProof",
+            "cryptosuite": "ecdsa-jcs-2019",
+            "created": "2024-11-30T17:03:42Z",
+            "verificationMethod": "did:example:zQmQoeG7u6XBtdXoek5p3aPoTjaSRemHAKrMcY2Hcjpe3jv#key-1",
+            "proofPurpose": "assertionMethod",
+            "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+          }
         }
       }
     },
@@ -1311,89 +1314,98 @@ support the trustworthiness of events as they occur across the fediverse
 without the need for centralized time-stamping services for either network.
         </p>
 
-        <pre class="example nohighlight" title="Example of a ActivityPub Post that was edited">
-[{
-  "event": {
-    "type": "create",
-    "data": {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "type": "create",
-      "id": "https://personal.example/mallory/87374",
-      "actor": "https://personal.example/mallory",
-      "object": {
-        "id": "https://website.example/mallory/note/72",
-        "type": "Note",
-        "attributedTo": "https://personal.example/mallory",
-        "content": "I'll be there at 5pm",
-        "published": "2025-02-10T15:04:55Z",
-        "to": ["https://example.org/~john/"],
-        "cc": ["https://website.example/~erik/followers",
-              "https://www.w3.org/ns/activitystreams#Public"]
+        <pre class="example nohighlight" title="Example of an ActivityPub Note that was edited">
+{
+  "log": [{
+    "event": {
+      "operation": {
+        "type": "create",
+        "data": {
+          "@context": "https://www.w3.org/ns/activitystreams",
+          "type": "Create",
+          "id": "https://personal.example/mallory/87374",
+          "actor": "https://personal.example/mallory",
+          "object": {
+            "id": "https://website.example/mallory/note/72",
+            "type": "Note",
+            "attributedTo": "https://personal.example/mallory",
+            "content": "I'll be there at 5pm",
+            "published": "2025-02-10T15:04:55Z",
+            "to": ["https://example.org/~john/"],
+            "cc": ["https://website.example/~erik/followers",
+                  "https://www.w3.org/ns/activitystreams#Public"]
+          },
+          "published": "2025-02-10T15:04:55Z",
+          "to": ["https://example.org/~john/"],
+          "cc": ["https://website.example/~erik/followers",
+                "https://www.w3.org/ns/activitystreams#Public"]
+          "proof": {
+            "type": "DataIntegrityProof",
+            "cryptosuite": "ecdsa-jcs-2019",
+            "created": "2025-02-10T15:04:55Z",
+            "verificationMethod": "https://personal.example/mallory#key-1",
+            "proofPurpose": "assertionMethod",
+            "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+          }
+        },
       },
-      "published": "2025-02-10T15:04:55Z",
-      "to": ["https://example.org/~john/"],
-      "cc": ["https://website.example/~erik/followers",
-            "https://www.w3.org/ns/activitystreams#Public"]
     },
-  },
-  "proof": [{
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2025-02-10T15:04:55Z",
-    "verificationMethod": "https://personal.example/mallory#key-1",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+    "proof": [{
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2025-02-10T15:05:02Z",
+      "verificationMethod": "https://redsocial.example/attestations#key-5W",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    }, {
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2025-02-10T15:05:08Z",
+      "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    }]
   }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2025-02-10T15:05:02Z",
-    "verificationMethod": "https://redsocial.example/attestations#key-5W",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
-  }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2025-02-10T15:05:08Z",
-    "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
-  }]
-}, {
-  "event": {
-    "type": "update",
-    "data": {
-      "@context": "https://www.w3.org/ns/activitystreams",
-      "type": "update",
-      "object": {
-        "id": "https://website.example/mallory/note/72",
-        "content": "I'll be there at 6pm",
-        "published": "2025-02-10T15:07:15Z",
-      }
+    "event": {
+      "previousEvent": "uEfXBDuQiAkoYyQ6YVtUmER8pN24wLZcLK9EBguM5WZlbAg"
+      "operation": {
+        "type": "update",
+        "data": {
+          "@context": "https://www.w3.org/ns/activitystreams",
+          "type": "Update",
+          "object": {
+            "id": "https://website.example/mallory/note/72",
+            "content": "I'll be there at 6pm",
+            "published": "2025-02-10T15:07:15Z",
+          }
+          "proof": {
+            "type": "DataIntegrityProof",
+            "cryptosuite": "ecdsa-jcs-2019",
+            "created": "2025-02-10T15:07:15Z",
+            "verificationMethod": "https://personal.example/mallory#key-1",
+            "proofPurpose": "assertionMethod",
+            "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
+          }
+        },
+      },
     },
-  },
-  "proof": [{
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2025-02-10T15:07:15Z",
-    "verificationMethod": "https://personal.example/mallory#key-1",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "z5obCSsrQxuFJdq6PrUMCtqY<span class="comment">...</span>93gBHqGDBtQLPFxpZxzwVWgHYrXxoV"
-  }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2025-02-10T15:07:19Z",
-    "verificationMethod": "https://redsocial.example/attestations#key-5W",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
-  }, {
-    "type": "DataIntegrityProof",
-    "cryptosuite": "ecdsa-jcs-2019",
-    "created": "2025-02-10T15:07:26Z",
-    "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
-    "proofPurpose": "assertionMethod",
-    "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    "proof": [{
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2025-02-10T15:07:19Z",
+      "verificationMethod": "https://redsocial.example/attestations#key-5W",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "zJdq6PrUMCtqY5obCSsrQxuF<span class="comment">...</span>tQLPFxpZxzwVWgHYrXxoV93gBHqGDB"
+    }, {
+      "type": "DataIntegrityProof",
+      "cryptosuite": "ecdsa-jcs-2019",
+      "created": "2025-02-10T15:07:26Z",
+      "verificationMethod": "https://bluesocial.example/witnesses#key-Z2",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "ztqY5obCSsrQxuFJdq6PrUMC<span class="comment">...</span>zwVWgHYrXxoV93gBHqGDBtQLPFxpZx"
+    }]
   }]
-}]
+}
         </pre>
       </section>
 

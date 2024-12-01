@@ -1492,5 +1492,96 @@ without the need for centralized time-stamping services for either network.
 
     </section>
 
+    <section>
+      <h2>Threat Model</h2>
+
+      <p>
+This specification is designed to address the following threat model.
+      </p>
+
+      <dl>
+        <dt>Controller-based History Forking</dt>
+        <dd>
+          <p>
+Threat: The data controller decides to rewrite history to give themselves
+an advantage in the ecosystem.
+          </p>
+          <p>
+Mitigation: Verifiers that have seen the most recent event log, before a fork,
+will be able to detect forks. Verifiers that have never seen the most recent
+event log, and have no way of retrieving it, will not be able to detect the
+fork in history.
+          </p>
+        </dd>
+        <dt>Cryptographic Compromise-based History Forking</dt>
+        <dd>
+          <p>
+Threat: An attacker steals a cryptographic key used by the data controller to
+remove the controller's keys from change control.
+          </p>
+          <p>
+Mitigation: The registration of recovery keys could allow recovery from
+this sort of compromise.
+          </p>
+        </dd>
+        <dt>Quantum Computer Attack</dt>
+        <dd>
+          <p>
+Threat: A quantum computer breaks elliptic curve cryptography.
+          </p>
+          <p>
+Mitigation: A post-quantum signature is provided as a witness signature before
+elliptic curve cryptography is broken.
+          </p>
+        </dd>
+        <dt>External Injection</dt>
+        <dd>
+          <p>
+Threat: An attacker attempts to inject an event into the event log.
+          </p>
+          <p>
+Mitigation: The `previousEvent` hash, and digital signatures on each operation,
+prevents this particular attack.
+          </p>
+        </dd>
+        <dt>Event Reordering</dt>
+        <dd>
+          <p>
+Threat: An attacker attempts to reorder or duplicate existing events in the
+event log.
+          </p>
+          <p>
+Mitigation: The `previousEvent` hash, and digital signatures on each operation,
+prevents this particular attack.
+          </p>
+        </dd>
+        <dt>Rogue Witness</dt>
+        <dd>
+          <p>
+Threat: A once good witness goes rogue and refuses to witness an event.
+          </p>
+          <p>
+Mitigation: Since trust is based on context, verifiers can choose when to
+trust a witness and when to switch trust to a different set of witnesses. It
+is presumed that most systems will utilize multiple witnesses with different
+ecosystem goals.
+          </p>
+        </dd>
+        <dt>Disappearing Witness</dt>
+        <dd>
+          <p>
+Threat: A witness disappears and can no longer be reached nor can their
+public cryptographic material be accessed.
+          </p>
+          <p>
+Mitigation: If the witness was popular, a cryptographic log of the witness
+keys most likely exists at a verifier. If not, the ecosystem depends on
+multiple witnesses so that the failure of any subset does not result in a
+non-functional system.
+          </p>
+        </dd>
+      </dl>
+    </section>
+
   </body>
 </html>

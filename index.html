@@ -243,6 +243,61 @@ the space and what sets this specification apart. Readers of this specification
 are urged to provide citations to prior art that they feel apply.
       </p>
 
+      <section class="nonnormative">
+        <h2>Goals</h2>
+
+        <p>
+This specification satisfies the following design goals:
+        </p>
+
+        <dl>
+          <dt>Generalized</dt>
+          <dd>
+The log format provided in this specification can contain events that record
+arbitrary operations on data objects, making it broadly useful in different
+market verticals.
+          </dd>
+          <dt>Cryptographically Verifiable</dt>
+          <dd>
+The log format is cryptographically verifiable, which can be used to detect log
+tampering, and reduces the reliance on centralized systems and services.
+          </dd>
+          <dt>Post-Quantum Ready</dt>
+          <dd>
+The log format uses cryptographic digests, which are secure against quantum
+computers, as the primary mechanism to link events together. The elliptic-curve
+cryptographic signatures, which are not secure against quantum computers, are a
+secondary mechanism used to witness events. This separation of concerns enables
+the cryptographic signature mechanism to be smoothly upgraded to a post-quantum
+secure cryptographic signature scheme on a per-log basis as post-quantum
+resistant digital proofs become more widely adopted.
+          </dd>
+          <dt>Decentralized Witnesses</dt>
+          <dd>
+The event witnessing mechanism does not rely on a central authority and
+does not rely on coordination among witnesses.
+          </dd>
+          <dt>Oblivous Signatures</dt>
+          <dd>
+The witnessing mechanism relies on oblivious signatures which greatly reduces
+liability related to cryptographic signatures produced by a witness.
+          </dd>
+          <dt>Separation of Concerns</dt>
+          <dd>
+The log layer is a separate architectural layer from the event layer, which
+is a separate layer from the operation layer, which defines the algorithms
+that the state machine uses to validate the lifecycle of the data object.
+          </dd>
+        </dl>
+      </section>
+
+      <section class="nonnormative">
+        <h2>Use Cases and Requirements</h2>
+
+        <p>
+        </p>
+      </section>
+
       <section id="conformance">
         <p>
 A <dfn>conforming log</dfn> is any [=byte sequence=] that can be

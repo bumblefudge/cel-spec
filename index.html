@@ -252,9 +252,9 @@ Sections [[[#data-model]]].
         </p>
 
         <p>
-A <dfn class="lint-ignore">conforming extension specification</dfn> is
+A <dfn class="lint-ignore">conforming [=application specification=]</dfn> is
 any specification that follows the relevant normative requirements in Section
-[[[#extension-specifications]]].
+[[[#application-specifications]]].
         </p>
 
         <p>
@@ -420,7 +420,7 @@ MUST support at least the `ecdsa-jcs-2019` cryptosuite as defined by the
 
         <p>
 Event logs have a default minimum size of 1MB and a maximum size of 10MB which
-can be overridden by extension specifications. To support chunking, the
+can be overridden by [=application specification=]s. To support chunking, the
 `previousLog` property is provided to ensure that arbitrarily long
 change histories are supported.
         </p>
@@ -482,7 +482,7 @@ value is defined below  and MUST include either a `data` property or a
 A REQUIRED property whose value is the type of event being expressed. A
 [=conforming processor=] MUST support the following [=string=] values: `Create`,
 `Update`, and `Deactivate` and MAY support other values defined by
-[=conforming extension specifications=].
+[=conforming [=application specification=]s=].
               </td>
             </tr>
             <tr>
@@ -933,14 +933,14 @@ Return |eventLog|.
           </li>
         </ol>
 
-        <p class="issue" title="Patching semantics defined by Extension Specification">
+        <p class="issue" title="Patching semantics defined by Application Specification">
 Different applications will have different ways in which they want to construct
 how the data entries relate to one another in a history of events. Some
 applications will prefer replacement semantics, where the entire object is
 provided in a self-contained manner for every change. Other applications will
 prefer patching semantics, where a patch set is provided as an update instead
 of the entire object. The state machine that applies event entries to the
-data object over time is specified by the extension specification and not
+data object over time is specified by the [=application specification=] and not
 this specification.
         </p>
 
@@ -1028,16 +1028,43 @@ Return |true|.
     </section>
 
     <section class="normative">
-      <h2>Extension Specifications</h2>
+      <h2>Application Specifications</h2>
 
-      <p class="issue" title="Contains sample extension specifications">
-This section contains sample extension specifications and how different
+      <p class="issue" title="Contains sample [=application specification=]s">
+This section contains sample [=application specification=]s and how different
 ecosystems would use this specification to achieve cryptographic event logs
 for the applications in their ecosystem.
       </p>
 
+      <p>
+A <dfn data-lt="application specification">cryptographic event log application
+specification</dfn> is a document that builds upon this specification and
+MUST define at least three algorithms:
+      </p>
+
+      <ol>
+        <li>
+The algorithm for establishing how cryptographic control is asserted over
+operations in the [=event log=].
+        </li>
+        <li>
+The algorithm for building the current state of a data object from the sequence
+of events in an [=event log=].
+        </li>
+        <li>
+The algorithm for determining whether or not a particular witness proof is
+valid.
+        </li>
+      </ol>
+
+      <p>
+[=Application specifications=] MAY also define other things such as how to
+discover data from a `digestMultibase` value, protocols for interacting with
+witnesses, and alternative proof and serialization mechanisms.
+      </p>
+
       <section>
-        <h3>DID Document Event Logs</h3>
+        <h3>The DID Document CEL Specification</h3>
 
         <p>
 The example in this section shows how changes to a DID Document could be
@@ -1062,9 +1089,9 @@ trusted to perform assertions, which is listed in the initial log entry.
 Future log entries can rotate cryptographic keys by using a key that is
 trusted to make assertions from the previous log entry. Future changes
 use the newly rotated key. Witness signatures are provided by two nations,
-the red nation and the blue nation, who are presumed to be mutually distrustful
+the red nation and the blue nation, who are presumed to be mutually distrusting
 of one another, but both provide witnessing services for their citizens.
-This demonstrates that mutually distrustful nations can provide signatures
+This demonstrates that mutually distrusting nations can provide signatures
 on each other's citizen data without requiring prior authorization. If
 nations cannot bring themselves to run such services, private industry will
 likely also operate witnessing services.
@@ -1161,7 +1188,7 @@ likely also operate witnessing services.
       </section>
 
       <section>
-        <h3>ActivityPub Event Logs</h3>
+        <h3>The ActivityPub CEL Specification</h3>
 
         <p>
 The example in this section demonstrates the creation of an ActivityPub Note,

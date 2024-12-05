@@ -234,13 +234,14 @@ particular object in a decentralized system.
       <p class="issue" data-number="1" title="Cite prior art">
 A reader of this specification might presume that the authors are not aware of
 the 30+ years of prior art around time stamping and cryptographic log services
-such as <a href="https://opentimestamps.org/">opentimestamps.org</a>,
-cryptographically signing a transaction log, blockchains and decentralized
-ledgers, Tahoe LAFS, did:peer, Trusted DID Web's log, did:dht, IPFS, and other
-technologies that provide technologies similar to what this specification
-provides. We probably need to have a section highlighting all the prior art in
-the space and what sets this specification apart. Readers of this specification
-are urged to provide citations to prior art that they feel apply.
+such as <a href="https://w3c.github.io/web-ledger/">Web Ledger</a>,
+<a href="https://opentimestamps.org/">opentimestamps.org</a>, cryptographically
+signing a transaction log, blockchains and decentralized ledgers, Tahoe LAFS,
+did:peer, Trusted DID Web's log, did:dht, IPFS, and other technologies that
+provide technologies similar to what this specification provides. We probably
+need to have a section highlighting all the prior art in the space and what sets
+this specification apart. Readers of this specification are urged to provide
+citations to prior art that they feel apply.
       </p>
 
       <section class="nonnormative">
@@ -360,6 +361,8 @@ that is tamper-evident and that can be cryptographically authenticated by
 verifiers in a decentralized manner.
       </p>
 
+      <p class="issue" data-number="3"></p>
+
       <section class="normative">
         <h2>Event Log</h2>
 
@@ -422,6 +425,8 @@ A REQUIRED property whose value conforms to a [=data integrity proof=]
 as defined by the [[VC-DATA-INTEGRITY]] specification. [=Conforming processors=]
 MUST support at least the `ecdsa-jcs-2019` cryptosuite as defined by the
 [[[VC-DI-ECDSA]]] specification.
+
+                        <p class="issue" data-number="2"></p>
                       </td>
                     </tr>
                   </tbody>
@@ -548,8 +553,9 @@ A <dfn data-lt="log entry">cryptographic event log entry</dfn> is used to
 establish an event that can be independently authenticated by a verifier. The
 [=log entry=] MUST be composed of at least a single `event` and one or more
 associated `proof` values that can be used to verify the validity of the event.
-
         </p>
+
+        <p class="issue" data-number="6"></p>
 
         <table class="simple">
           <thead>
@@ -580,6 +586,8 @@ A REQUIRED property whose value is the type of event being expressed. A
 [=conforming processor=] MUST support the following [=string=] values: `create`,
 `update`, and `deactivate` and MAY support other values defined by a
 [=conforming application specification=].
+
+                        <div class="issue" data-number="7"></div>
                       </td>
                     </tr>
                     <tr>
@@ -781,6 +789,8 @@ used. For these use cases, a compact format is provided that can be further
 compressed into a minimal binary CBOR stream. A minimum viable
 [=cryptographic event log=] is shown below:
         </p>
+
+        <p class="issue" data-number="5"></p>
 
         <!--code><span class="vc-hash" data-hash-url="index.html"
           data-hash-format="multihash sha2-256" /></code-->
@@ -1227,6 +1237,8 @@ valid.
 discover data from a `digestMultibase` value, protocols for interacting with
 witnesses, and alternative proof and serialization mechanisms.
       </p>
+
+      <p class="issue" data-number="4"></p>
 
       <section>
         <h3>The DID Document CEL Specification</h3>
